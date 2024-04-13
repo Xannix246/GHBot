@@ -1,0 +1,15 @@
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(<name>)
+        .setDescription(<description>),
+
+    async execute(interaction: ChatInputCommandInteraction) {
+        <code>
+    }
+}
+
+
+
+//a template for commands. new commands files can be named as Name of command.

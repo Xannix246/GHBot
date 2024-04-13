@@ -1,0 +1,31 @@
+{
+    "templates": [
+        {
+            "name": "test", //название шаблона
+            "testCategory": {
+                "channels": [
+                    {
+                        "name": "test_channel_1", //название канала
+                        "allowAccess": [841010237174710273, 881221176398086154] //id ролей, имеющих доступ к каналу
+                    },
+                    {
+                        "name": "test_channel_2",
+                        "allowAccess": [] //если пусто - для всех
+                    }
+                ]
+            },
+            "testCategory2": { //названия категорий не могут быть одинаковы
+                "channels": [
+                    {
+                        "name": "test_channel_1",
+                        "allowAccess": [841010237174710273, 881221176398086154]
+                    },
+                    {
+                        "name": "test_channel_2",
+                        "allowAccess": []
+                    }
+                ]
+            }
+        }
+    ]
+}

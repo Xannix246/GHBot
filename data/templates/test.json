@@ -1,0 +1,22 @@
+{
+    "templates": [
+        {
+            "name": "blabla",
+            "testCategory": {
+                "channels": [
+                    {
+                        "name": "test_channel_1",
+                        "allowAccess": [
+                            "841010237174710300",
+                            "881221176398086100"
+                        ]
+                    },
+                    {
+                        "name": "test_channel_2",
+                        "allowAccess": []
+                    }
+                ]
+            }
+        }
+    ]
+}
