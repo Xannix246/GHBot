@@ -1,4 +1,4 @@
-import { Client, Events, Interaction, Message } from "discord.js";
+import { Client, Events } from "discord.js";
 import { ListenMessage } from "global";
 const data = require('../data/data.json');
 
@@ -6,6 +6,7 @@ const ListenerLoader = async (client: Client) => {
     const listeners = require(`../data/servers/${data.GuildId}.json`);
 
     client.on(Events.MessageReactionAdd, async (reaction, user) => {
+        if(user.bot) return;
         if (reaction.message.guildId == null) return console.log('not found');
     
         const guilds = client.guilds.cache.get(reaction.message.guildId);
@@ -23,6 +24,7 @@ const ListenerLoader = async (client: Client) => {
     })
     
     client.on(Events.MessageReactionRemove, async (reaction, user) => {
+        if(user.bot) return;
         if (reaction.message.guildId == null) return console.log('not found');
     
         const guilds = client.guilds.cache.get(reaction.message.guildId);
