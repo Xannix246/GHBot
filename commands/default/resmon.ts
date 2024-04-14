@@ -39,7 +39,7 @@ module.exports = {
                 { name: 'Время ', value: `Время отправки: ${client.ws.ping.toFixed(2)} миллисекунд \nВремя работы: ${duration(client.uptime).days()} д. ${duration(client.uptime).hours()} ч. ${duration(client.uptime).minutes()} мин. ${duration(client.uptime).seconds()} сек.` },
                 { name: 'Статистика', value: `Серверов: ${client.guilds.cache.size}\nУчастников: ${client.users.cache.size}` },
                 { name: 'Платформа', value: `Операционная система: ${platform}` },
-                { name: 'Системная ~~шоколадка~~ информация', value: `Процессор: ${os.cpus()[0].model}\nВерсия Node.js: ${process.version}\nВерсия Discord.js: ${version}` },
+                { name: 'Системная ~~шоколадка~~ информация', value: `Процессор: ${os.cpus()[0].model || 'Неизвестно'}\nВерсия Node.js: ${process.version}\nВерсия Discord.js: ${version}` },
                 { name: 'Качество отправки', value: `${clienthealth} (${client.ws.ping} миллисекунд)` },
                 { name: 'Команды', value: `Общее кол-во команд бота: ${commandsData.size} команд` }
             )
