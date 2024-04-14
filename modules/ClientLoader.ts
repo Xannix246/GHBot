@@ -1,6 +1,7 @@
 import { Client, ClientOptions, Collection, Events } from "discord.js";
 import CommandLoader from "./CommandsLoader";
 import ListenerLoader from "./ListenerLoader";
+import GreetingModule from "./Greeting";
 const data = require('../data/data.json');
 
 
@@ -15,6 +16,7 @@ class NewClient extends Client {
         this.on('ready', () => {
             console.log('started!');
             ListenerLoader(this);
+            GreetingModule(this);
         })
 
 

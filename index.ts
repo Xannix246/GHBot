@@ -1,7 +1,5 @@
-import { Events, GatewayIntentBits, Partials } from "discord.js";
+import { GatewayIntentBits, Partials } from "discord.js";
 import { NewClient } from "./modules";
-const data = require('./data/data.json');
-const listeners = require(`./data/servers/${data.GuildId}.json`);
 
 
 

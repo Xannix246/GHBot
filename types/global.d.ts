@@ -9,3 +9,12 @@ export interface ListenMessage extends Array<string> {
     reaction: string;
     role: string;
 }
+
+export interface GreetingUser extends Array<string> {
+    enabled: boolean;
+    userAddText: string;
+    userRemoveText: string;
+    channelId: string;
+    addAttachment: string;
+    removeAttachment: string;
+}
