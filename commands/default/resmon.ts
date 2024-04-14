@@ -29,6 +29,8 @@ module.exports = {
             clienthealth = "Бот работает в онлайне, но ответит с большой задержкой." :
             clienthealth = "Бот работает в онлайне, оптимальная задержка.";
 
+
+            console.log(os.cpus());
         const embed = new EmbedBuilder()
             .setTitle("Монитор ресурсов бота.")
             .setColor(0x0080ff)
