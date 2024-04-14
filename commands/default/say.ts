@@ -1,5 +1,4 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { RolesChecker } from "../../modules";
 
 
 
@@ -25,7 +24,7 @@ module.exports = {
 
 
     async execute(interaction: ChatInputCommandInteraction) {
-        if(!RolesChecker(interaction, false)) return interaction.reply('У вас недостаточно прав.');
+        if(!(interaction.member?.user.id === interaction.guild?.ownerId)) return interaction.reply('У вас недостаточно прав.');
 
         const sayEmbed = new EmbedBuilder()
             .setDescription(`${interaction.options.getString('message')}`)
