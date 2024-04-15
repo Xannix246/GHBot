@@ -5,12 +5,12 @@ const data = require('../data/data.json');
 const GreetingModule = (client: Client) => {
     const greeting: GreetingUser = require(`../data/servers/${data.GuildId}.json`).greeting;
     const channel = client.channels.cache.get(greeting.channelId);
-    const guild = client.channels.cache.get(data.GuildId);
+    const guild = client.guilds.cache.get(data.GuildId);
 
     if (greeting.enabled) {
         if (channel === undefined) return;
 
-        client.on(Events.GuildMemberAdd, async (user) => {;
+        client.on(Events.GuildMemberAdd, async (user) => {
             if (greeting.userAddText == '') return;
 
             const message = greeting.userAddText
@@ -23,12 +23,17 @@ const GreetingModule = (client: Client) => {
                     .setTitle('Приветствие')
                     .setDescription(message)
                     .setColor(0x0080ff)
-                    .setImage(`${greeting.addAttachment}`);
 
                 return greetingEmbed
             }
 
-            (channel as TextChannel).send({ embeds: [greet()] });
+            let embed = greet();
+
+            if(greeting.addAttachment != '') {
+                embed.setImage(`${greeting.addAttachment}`);
+            }
+
+            (channel as TextChannel).send({ embeds: [embed] });
         })
 
         client.on(Events.GuildMemberRemove, async (user) => {
@@ -43,12 +48,17 @@ const GreetingModule = (client: Client) => {
                     .setTitle('Прощание')
                     .setDescription(message)
                     .setColor(0x0080ff)
-                    .setImage(`${greeting.addAttachment}`);
 
                 return greetingEmbed
             }
 
-            (channel as TextChannel).send({ embeds: [greet()] });
+            let embed = greet();
+
+            if(greeting.addAttachment != '') {
+                embed.setImage(`${greeting.removeAttachment}`);
+            }
+
+            (channel as TextChannel).send({ embeds: [embed] });
         });
     }
 
