@@ -18,8 +18,10 @@ const ListenerLoader = async (client: Client) => {
 
                 for (let i = 0; i < listeners.listeners.length; i++) {
                     if ((member?.roles as GuildMemberRoleManager).cache.find(role => role.id === element.role)) {
-                        reaction.users.remove(member?.id);
-                        return;
+                        if(listeners.listeners.find((el: ListenMessage) => el.role == element.role).message == reaction.message.id) {
+                            reaction.users.remove(member?.id);
+                            return;
+                        }
                     }
                 }
 
