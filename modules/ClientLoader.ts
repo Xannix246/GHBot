@@ -1,3 +1,7 @@
+/*
+    Может все данные на монгу перевести?
+*/
+
 import { Client, ClientOptions, Collection, Events } from "discord.js";
 import CommandLoader from "./CommandsLoader";
 import ListenerLoader from "./ListenerLoader";
