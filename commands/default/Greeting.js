@@ -56,7 +56,7 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        if (!RolesChecker(interaction, false /*Надо заменить на true*/)) return interaction.reply('У вас недостаточно прав.');
+        if (!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
         const greeting = require(`../../data/servers/${data.GuildId}.json`);
 
         switch (interaction.options.getSubcommand()) {
