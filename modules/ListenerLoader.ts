@@ -14,7 +14,7 @@ const ListenerLoader = async (client: Client) => {
     
         listeners.listeners.forEach(async (element: ListenMessage) => {
             try {
-                if (reaction.message.id == element.message) {
+                if (reaction.message.id == element.message && reaction.emoji.name == element.reaction) {
                     await member?.roles.add(element.role);
                 }
             } catch (err) {
@@ -32,7 +32,7 @@ const ListenerLoader = async (client: Client) => {
     
         listeners.listeners.forEach(async (element: ListenMessage) => {
             try {
-                if (reaction.message.id == element.message) {
+                if (reaction.message.id == element.message && reaction.emoji.name == element.reaction) {
                     await member?.roles.remove(element.role);
                 }
             } catch (err) {
