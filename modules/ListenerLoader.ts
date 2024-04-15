@@ -14,14 +14,15 @@ const ListenerLoader = async (client: Client) => {
 
         listeners.listeners.forEach(async (element: ListenMessage) => {
 
-            for (let i = 0; i < listeners.length; i++) {
-                if ((member?.roles as GuildMemberRoleManager).cache.find(role => role.id === element.role)) {
-                    reaction.remove();
-                    return;
-                }
-            }
-
             try {
+
+                for (let i = 0; i < listeners.listeners.length; i++) {
+                    if ((member?.roles as GuildMemberRoleManager).cache.find(role => role.id === element.role)) {
+                        reaction.users.remove(member?.id);
+                        return;
+                    }
+                }
+
                 if (reaction.message.id == element.message && reaction.emoji.name == element.reaction) {
                     await member?.roles.add(element.role);
                 }
