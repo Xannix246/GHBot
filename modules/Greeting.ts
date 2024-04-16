@@ -33,7 +33,7 @@ const GreetingModule = (client: Client) => {
                 embed.setImage(`${greeting.addAttachment}`);
             }
 
-            (channel as TextChannel).send({ embeds: [embed] });
+            (channel as TextChannel).send({ content: `${user}`, embeds: [embed] });
         })
 
         client.on(Events.GuildMemberRemove, async (user) => {
