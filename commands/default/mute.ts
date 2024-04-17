@@ -26,7 +26,7 @@ module.exports = {
     async execute(interaction: ChatInputCommandInteraction) {
         if(!RolesChecker(interaction, false)) return interaction.reply('У вас недостаточно прав.');
 
-        let time: number | null = (interaction.options.getInteger('time') ?? 60) * 1000;
+        let time: number | null = (interaction.options.getInteger('time') ?? 60) * 1000 * 60;
         if (time === 0) time = null;
 
         const user = interaction.options.getMember('user');
