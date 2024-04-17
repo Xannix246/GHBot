@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { RolesChecker } from "../../modules";
-import { GreetingUser } from "global";
-const data = require('../../data/data.json');
+import { Data, GreetingUser } from "global";
+const data: Data = require('../../data/data.json');
 
 
 

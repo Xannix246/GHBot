@@ -1,12 +1,10 @@
-/*
-    Может все данные на монгу перевести?
-*/
-
 import { Client, ClientOptions, Collection, Events } from "discord.js";
+import mongoose from "mongoose";
 import CommandLoader from "./CommandsLoader";
 import ListenerLoader from "./ListenerLoader";
 import GreetingModule from "./Greeting";
-const data = require('../data/data.json');
+import { Data } from "global";
+const data: Data = require('../data/data.json');
 
 
 
@@ -18,7 +16,13 @@ class NewClient extends Client {
         this.commandsData = new Collection();
 
         this.on('ready', () => {
-            console.log('started!');
+            console.log('Started!');
+            try {
+                mongoose.connect(data.mongodb);
+                console.log('Connected to MongoDB!');
+            } catch (err) {
+                console.log('Failed to connect MongoDB: ', err);
+            }
             ListenerLoader(this);
             GreetingModule(this);
         })
@@ -45,7 +49,7 @@ class NewClient extends Client {
     //starting the bot
     async launch() {
         await CommandLoader(this);
-        return this.login(data.token)
+        return this.login(data.token);
     }
 }
 

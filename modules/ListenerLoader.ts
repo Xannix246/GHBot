@@ -1,6 +1,6 @@
 import { Client, Events, GuildMember, GuildMemberRoleManager } from "discord.js";
-import { ListenMessage } from "global";
-const data = require('../data/data.json');
+import { Data, ListenMessage } from "global";
+const data: Data = require('../data/data.json');
 
 const ListenerLoader = async (client: Client) => {
     const listeners = require(`../data/servers/${data.GuildId}.json`);

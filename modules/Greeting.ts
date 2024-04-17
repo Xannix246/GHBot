@@ -1,6 +1,6 @@
 import { Client, EmbedBuilder, Events, TextChannel } from "discord.js";
-import { GreetingUser } from "global";
-const data = require('../data/data.json');
+import { Data, GreetingUser } from "global";
+const data: Data = require('../data/data.json');
 
 const GreetingModule = (client: Client) => {
     const greeting: GreetingUser = require(`../data/servers/${data.GuildId}.json`).greeting;
@@ -24,7 +24,7 @@ const GreetingModule = (client: Client) => {
                     .setDescription(message)
                     .setColor(0x0080ff)
 
-                return greetingEmbed
+                return greetingEmbed;
             }
 
             let embed = greet();
@@ -49,7 +49,7 @@ const GreetingModule = (client: Client) => {
                     .setDescription(message)
                     .setColor(0x0080ff)
 
-                return greetingEmbed
+                return greetingEmbed;
             }
 
             let embed = greet();
