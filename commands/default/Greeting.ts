@@ -1,13 +1,13 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const fs = require('fs');
-const { RolesChecker } = require("../../modules");
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Attachment } from "discord.js";
+import fs from 'fs';
+import { RolesChecker } from "../../modules";
 const data = require('../../data/data.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('greeting')
         .setDescription('Настройка приветствия новых пользователей')
-        .addSubcommand(subcommand =>
+        .addSubcommand((subcommand) =>
             subcommand
                 .setName('info')
                 .setDescription('Информация о команде'))
@@ -55,7 +55,7 @@ module.exports = {
                 )
         ),
 
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         if (!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
         const greeting = require(`../../data/servers/${data.GuildId}.json`);
 
@@ -83,7 +83,7 @@ module.exports = {
                 break;
             case 'set-channel':
                 const channel = interaction.options.getChannel('channel');
-                greeting.greeting.channelId = channel.id;
+                greeting.greeting.channelId = channel?.id;
 
                 fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(greeting, null, 4));
                 interaction.reply(`Канал ${channel} выбран как канал приветствий!`);
@@ -97,8 +97,8 @@ module.exports = {
                     greeting.greeting.userAddText = message;
 
                     if (attachment) {
-                        if (attachment.contentType.includes('image')) {
-                            greeting.greeting.addAttachment = attachment.attachment;
+                        if (attachment.contentType?.includes('image')) {
+                            greeting.greeting.addAttachment = attachment.url;
                         }
                     }
                     interaction.reply('Приветственное сообщение установлено!');
@@ -106,8 +106,8 @@ module.exports = {
                     greeting.greeting.userRemoveText = message;
 
                     if (attachment) {
-                        if (attachment.contentType.includes('image')) {
-                            greeting.greeting.removeAttachment = attachment.attachment;
+                        if (attachment.contentType?.includes('image')) {
+                            greeting.greeting.removeAttachment = attachment.url;
                         }
                     }
                     interaction.reply('Прощальное сообщение установлено!');
@@ -121,7 +121,7 @@ module.exports = {
             let setup = [];
             if (greeting.greeting.userAddText == '') setup.push('Сообщение прихода пользователя');
             if (greeting.greeting.userRemoveText == '') setup.push('Сообщение ухода пользователя');
-            interaction.channel.send(`Кажется, параметр(ы) \`[${setup.join(', ')}]\` не настроен(ы). Не забудьте их настроить командой \`/greeting edit\`!`);
+            interaction.channel?.send(`Кажется, параметр(ы) \`[${setup.join(', ')}]\` не настроен(ы). Не забудьте их настроить командой \`/greeting edit\`!`);
         }
     }
 }
