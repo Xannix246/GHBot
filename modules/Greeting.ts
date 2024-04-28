@@ -1,19 +1,20 @@
 import { Client, EmbedBuilder, Events, TextChannel } from "discord.js";
-import { Data, GreetingUser } from "global";
+import { Data } from "global";
+import mongoose from "mongoose";
 const data: Data = require('../data/data.json');
 
-const GreetingModule = (client: Client) => {
-    const greeting: GreetingUser = require(`../data/servers/${data.GuildId}.json`).greeting;
-    const channel = client.channels.cache.get(greeting.channelId);
+const GreetingModule = async (client: Client, Model: mongoose.Model<any>) => {
+    const serverDb: any = await Model.findOne({id: data.GuildId});
+    const channel = client.channels.cache.get(serverDb.greeting.channelId);
     const guild = client.guilds.cache.get(data.GuildId);
 
-    if (greeting.enabled) {
+    if (serverDb.greeting.enabled) {
         if (channel === undefined) return;
 
         client.on(Events.GuildMemberAdd, async (user) => {
-            if (greeting.userAddText == '') return;
+            if (serverDb.greeting.userAddText == '') return;
 
-            const message = greeting.userAddText
+            const message = serverDb.greeting.userAddText
                 .replaceAll('%user%', `${user}`)
                 .replaceAll('%guild%', `${guild}`);
 
@@ -29,17 +30,17 @@ const GreetingModule = (client: Client) => {
 
             let embed = greet();
 
-            if(greeting.addAttachment != '') {
-                embed.setImage(`${greeting.addAttachment}`);
+            if(serverDb.greeting.addAttachment != '') {
+                embed.setImage(`${serverDb.greeting.addAttachment}`);
             }
 
             (channel as TextChannel).send({ content: `${user}`, embeds: [embed] });
         })
 
         client.on(Events.GuildMemberRemove, async (user) => {
-            if (greeting.userRemoveText == '') return;
+            if (serverDb.greeting.userRemoveText == '') return;
 
-            const message = greeting.userRemoveText
+            const message = serverDb.greeting.userRemoveText
                 .replaceAll('%user%', `${user}`)
                 .replaceAll('%guild%', `${guild}`);
 
@@ -54,8 +55,8 @@ const GreetingModule = (client: Client) => {
 
             let embed = greet();
 
-            if(greeting.addAttachment != '') {
-                embed.setImage(`${greeting.removeAttachment}`);
+            if(serverDb.greeting.addAttachment != '') {
+                embed.setImage(`${serverDb.greeting.removeAttachment}`);
             }
 
             (channel as TextChannel).send({ embeds: [embed] });

@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, Message, TextChannel } from "discord.js";
+import { ChatInputCommandInteraction, Client, Collection, Message, TextChannel } from "discord.js";
 import { SlashCommandBuilder } from "discord.js";
-import fs from 'fs';
+import { RolesChecker } from "../../modules";
+import mongoose, { Schema } from "mongoose";
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -37,10 +38,9 @@ module.exports = {
                 .setName('remove')
                 .setDescription('Удаление выдачи ролей')),
 
-    async execute(interaction: ChatInputCommandInteraction) {
-        let listeners = require(`../../data/servers/${interaction.guildId}.json`);
-
-
+    async execute(interaction: ChatInputCommandInteraction, commandsData: Collection<unknown, unknown>, client: Client, Model: mongoose.Model<Schema>) {
+        if(!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
+        const serverDb: any = await Model.findOne({id: interaction.guildId});
 
         if(interaction.options.getSubcommand() == 'add') {
             const channel = interaction.options.getChannel('channel');
@@ -54,18 +54,19 @@ module.exports = {
                 return interaction.reply('Сообщение не найдено.');
             }
 
-            listeners.listeners.push({
+            serverDb?.listeners.push({
                 "channel": `${channel?.id}`,
                 "message": `${message.id}`,
                 "reaction": `${reaction}`,
                 "role": `${role?.id}`
             })
 
-            fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(listeners, null, 4));
             message.react(reaction as string);
             interaction.reply('Успешно добавлено!');
         } else if(interaction.options.getSubcommand() == 'remove') {
 
         } else interaction.reply('Произошла неизвестная ошибка.');
+
+        await serverDb?.save();
     }
 }

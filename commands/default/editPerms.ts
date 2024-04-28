@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import fs from 'fs';
+import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder, Collection, Client } from "discord.js";
 import { RolesChecker } from '../../modules';
+import mongoose, { Schema } from "mongoose";
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -31,16 +31,15 @@ module.exports = {
                 .addRoleOption((option: any) => option.setName('remove-role').setRequired(true).setDescription('Выберите роль'))
         ),
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, commandsData: Collection<unknown, unknown>, client: Client, Model: mongoose.Model<Schema>) {
         if (!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
-
-        let roles = require(`../../data/servers/${interaction?.guildId}.json`);
+        const serverDb: any = await Model.findOne({id: interaction.guildId});
 
         const permsListEbmed = new EmbedBuilder()
             .setDescription(`Список прав сервера`)
             .addFields(
-                { name: 'Административные права', value: `${roles.administration.map((el: any) => `<@&${el}>`).join(', ') || 'Отсутствуют'}` },
-                { name: 'Модеративные права', value: `${roles.moderation.map((el: any) => `<@&${el}>`).join(', ') || 'Отсутствуют'}` }
+                { name: 'Административные права', value: `${serverDb?.administration.map((el: any) => `<@&${el}>`).join(', ') || 'Отсутствуют'}` },
+                { name: 'Модеративные права', value: `${serverDb?.moderation.map((el: any) => `<@&${el}>`).join(', ') || 'Отсутствуют'}` }
             )
             .setColor(0x0080ff)
             .setFooter({ text: 'Вы можете изменять права, используя подкоманды add и remove.' });
@@ -51,27 +50,25 @@ module.exports = {
             const role = interaction.options.getRole('add-role');
 
             if (interaction.options.getString('category') == 'admin') {
-                roles.administration.push(role?.id);
+                await serverDb?.administration.push(role?.id);
                 interaction.reply({ content: `Роль ${role} добавлена в категорию администраторов.`, flags: ['4096'] });
             } else {
-                roles.moderation.push(role?.id);
+                await serverDb?.moderation.push(role?.id);
                 interaction.reply({ content: `Роль ${role} добавлена в категорию модераторов.`, flags: ['4096'] })
             }
-            fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(roles, null, 4));
         } else if (interaction.options.getSubcommand() == 'remove') {
             const role = interaction.options.getRole('remove-role');
 
-            for (let i = 0; i < roles.administration.length; i++) {
-                if (roles.administration[i] == role?.id) roles.administration.splice(i, 1);
+            for (let i = 0; i < serverDb?.administration.length; i++) {
+                if (serverDb?.administration[i] == role?.id) serverDb?.administration.splice(i, 1);
             }
 
-            for (let i = 0; i < roles.moderation.length; i++) {
-                if (roles.moderation[i] == role?.id) roles.moderation.splice(i, 1);
+            for (let i = 0; i < serverDb?.moderation.length; i++) {
+                if (serverDb?.moderation[i] == role?.id) serverDb?.moderation.splice(i, 1);
             }
-
-            fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(roles, null, 4));
             interaction.reply({ content: `Роль ${role} удалена из всех категорий.`, flags: ['4096'] });
-
         } else interaction.reply('Произошла неизвестна ошибка');
+
+        await serverDb?.save();
     }
 }
