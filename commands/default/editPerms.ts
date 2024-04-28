@@ -7,13 +7,16 @@ module.exports = {
         .setName('edit-perms')
         .setDescription('Настройка прав сервера')
         .addSubcommand((subcommand: any) =>
+        .addSubcommand((subcommand: any) =>
             subcommand
                 .setName('list')
                 .setDescription('Список прав сервера'))
         .addSubcommand((subcommand: any) =>
+        .addSubcommand((subcommand: any) =>
             subcommand
                 .setName('add')
                 .setDescription('Добавить роль')
+                .addStringOption((option: any) =>
                 .addStringOption((option: any) =>
                     option.setName('category')
                         .setDescription('Тип прав')
@@ -23,11 +26,14 @@ module.exports = {
                             { name: 'Модератор', value: 'moderator' },
                         ))
                 .addRoleOption((option: any) => option.setName('add-role').setRequired(true).setDescription('Выберите роль'))
+                .addRoleOption((option: any) => option.setName('add-role').setRequired(true).setDescription('Выберите роль'))
         )
+        .addSubcommand((subcommand: any) =>
         .addSubcommand((subcommand: any) =>
             subcommand
                 .setName('remove')
                 .setDescription('Удалить роль')
+                .addRoleOption((option: any) => option.setName('remove-role').setRequired(true).setDescription('Выберите роль'))
                 .addRoleOption((option: any) => option.setName('remove-role').setRequired(true).setDescription('Выберите роль'))
         ),
 
