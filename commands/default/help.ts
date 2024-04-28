@@ -5,7 +5,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, Collect
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('перечень базовых команд'),
+        .setDescription('Перечень базовых команд'),
 
     async execute(interaction: ChatInputCommandInteraction, commandsData: Collection<unknown, unknown>) {
         const helpEmbed = new EmbedBuilder()
