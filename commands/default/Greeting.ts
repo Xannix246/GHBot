@@ -7,7 +7,6 @@ module.exports = {
         .setName('greeting')
         .setDescription('Настройка приветствия новых пользователей')
         .addSubcommand((subcommand) =>
-        .addSubcommand((subcommand) =>
             subcommand
                 .setName('info')
                 .setDescription('Информация о команде'))
