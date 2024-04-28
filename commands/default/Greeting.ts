@@ -1,12 +1,12 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Attachment } from "discord.js";
-import fs from 'fs';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Attachment, Collection, Client } from "discord.js";
 import { RolesChecker } from "../../modules";
-const data = require('../../data/data.json');
+import mongoose, { Schema } from "mongoose";
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('greeting')
         .setDescription('Настройка приветствия новых пользователей')
+        .addSubcommand((subcommand) =>
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('info')
@@ -55,9 +55,9 @@ module.exports = {
                 )
         ),
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, commandsData: Collection<unknown, unknown>, client: Client, Model: mongoose.Model<Schema>) {
         if (!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
-        const greeting = require(`../../data/servers/${data.GuildId}.json`);
+        const serverDb: any = await Model.findOne({id: interaction.guildId});
 
         switch (interaction.options.getSubcommand()) {
             case 'info':
@@ -72,20 +72,16 @@ module.exports = {
             case 'enable':
                 const option = interaction.options.getBoolean('option');
                 if (option) {
-                    greeting.greeting.enabled = true;
+                    serverDb.greeting.enabled = true;
                     interaction.reply(`Приветственные сообщения включены!`);
                 } else {
-                    greeting.greeting.enabled = false;
+                    serverDb.greeting.enabled = false;
                     interaction.reply(`Приветственные сообщения отключены!`);
                 }
-
-                fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(greeting, null, 4));
                 break;
             case 'set-channel':
                 const channel = interaction.options.getChannel('channel');
-                greeting.greeting.channelId = channel?.id;
-
-                fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(greeting, null, 4));
+                serverDb.greeting.channelId = channel?.id;
                 interaction.reply(`Канал ${channel} выбран как канал приветствий!`);
                 break;
             case 'edit':
@@ -94,34 +90,33 @@ module.exports = {
                 const attachment = interaction.options.getAttachment('attachment');
 
                 if (messageType == 'useradd') {
-                    greeting.greeting.userAddText = message;
+                    serverDb.greeting.userAddText = message;
 
                     if (attachment) {
                         if (attachment.contentType?.includes('image')) {
-                            greeting.greeting.addAttachment = attachment.url;
+                            serverDb.greeting.addAttachment = attachment.url;
                         }
                     }
                     interaction.reply('Приветственное сообщение установлено!');
                 } else {
-                    greeting.greeting.userRemoveText = message;
+                    serverDb.greeting.userRemoveText = message;
 
                     if (attachment) {
                         if (attachment.contentType?.includes('image')) {
-                            greeting.greeting.removeAttachment = attachment.url;
+                            serverDb.greeting.removeAttachment = attachment.url;
                         }
                     }
                     interaction.reply('Прощальное сообщение установлено!');
                 }
-
-                fs.writeFileSync(`./data/servers/${interaction?.guildId}.json`, JSON.stringify(greeting, null, 4));
                 break;
         }
 
-        if (greeting.greeting.userAddText == '' || greeting.greeting.userRemoveText == '') {
+        if (serverDb.greeting.userAddText == '' || serverDb.greeting.userRemoveText == '') {
             let setup = [];
-            if (greeting.greeting.userAddText == '') setup.push('Сообщение прихода пользователя');
-            if (greeting.greeting.userRemoveText == '') setup.push('Сообщение ухода пользователя');
+            if (serverDb.greeting.userAddText == '') setup.push('Сообщение прихода пользователя');
+            if (serverDb.greeting.userRemoveText == '') setup.push('Сообщение ухода пользователя');
             interaction.channel?.send(`Кажется, параметр(ы) \`[${setup.join(', ')}]\` не настроен(ы). Не забудьте их настроить командой \`/greeting edit\`!`);
         }
+        await serverDb?.save();
     }
 }

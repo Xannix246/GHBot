@@ -1,6 +1,7 @@
 import { glob, globSync, globStream, globStreamSync, Glob } from 'glob';
 import { Client, REST, Routes } from "discord.js";
-const data = require('../data/data.json');
+import { Data } from 'global';
+const data: Data = require('../data/data.json');
 
 
 

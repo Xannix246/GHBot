@@ -1,3 +1,11 @@
+export interface Data extends Array<string> {
+    token: string;
+    mongodb: string;
+    ClientId: string;
+    GuildId: string;
+    updateCommands: boolean;
+}
+
 export interface Roles extends Array<string> {
     moderation: string[],
     administration: string[]
