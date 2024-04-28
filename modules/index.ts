@@ -4,3 +4,5 @@ export { default as FileChecker } from './utils/FileChecker';
 export { default as RolesChecker } from './utils/RolesChecker';
 export { default as ListenerLoader } from './ListenerLoader';
 export { default as GreetingModule } from './Greeting';
+export { default as Server } from './utils/MongodbSync';
+export { default as DBSync } from './utils/DbAddServer';
