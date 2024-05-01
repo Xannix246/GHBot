@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const data: Data = require('../data/data.json');
 
 const ListenerLoader = async (client: Client, Model: mongoose.Model<any>) => {
-    const serverDb: any = await Model.findOne({id: data.GuildId});
+    const serverDb: any = await Model.findOne({ id: data.GuildId });
 
     client.on(Events.MessageReactionAdd, async (reaction, user) => {
         if (user.bot) return;
@@ -16,15 +16,16 @@ const ListenerLoader = async (client: Client, Model: mongoose.Model<any>) => {
         serverDb.listeners.forEach(async (element: ListenMessage) => {
 
             try {
+                    for (let i = 0; i < serverDb.listeners.length; i++) {
+                        if(serverDb.exceptions.some((msg: String) => msg === reaction.message.id)) continue;
 
-                for (let i = 0; i < serverDb.listeners.length; i++) {
-                    if ((member?.roles as GuildMemberRoleManager).cache.find(role => role.id === element.role)) {
-                        if(serverDb.listeners.find((el: ListenMessage) => el.role == element.role).message == reaction.message.id) {
-                            reaction.users.remove(member?.id);
-                            return;
+                        if ((member?.roles as GuildMemberRoleManager).cache.find(role => role.id === element.role)) {
+                            if (serverDb.listeners.find((el: ListenMessage) => el.role == element.role).message == reaction.message.id) {
+                                reaction.users.remove(member?.id);
+                                return;
+                            }
                         }
                     }
-                }
 
                 if (reaction.message.id == element.message && reaction.emoji.name == element.reaction) {
                     await member?.roles.add(element.role);

@@ -5,6 +5,7 @@ const serverSchema = new Schema({
     id: String,
     administration: [String],
     moderation: [String],
+    exceptions: [String],
     listeners: [{
         channel: String,
         message: String,

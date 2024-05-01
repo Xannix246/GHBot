@@ -13,6 +13,7 @@ const DBSync = async (interaction: Interaction) => {
             administration: [],
             moderation: [],
             listeners: [],
+            exceptions: [],
             greeting: {
                 enabled: false,
                 channelId: "",
