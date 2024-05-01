@@ -77,7 +77,7 @@ module.exports = {
         } else if (interaction.options.getSubcommand() == 'add-exception') {
             let message: string | null = interaction.options.getString('message-id');
             serverDb.exceptions.push(message);
-            interaction.reply('Сообщение добавлено в исключения.')
+            interaction.reply('Сообщение добавлено в исключений.')
         } else interaction.reply('Произошла неизвестная ошибка.');
 
         await serverDb?.save();
