@@ -48,7 +48,7 @@ module.exports = {
         ),
 
     async execute(interaction: ChatInputCommandInteraction, commandsData: Collection<unknown, unknown>, client: Client, Model: mongoose.Model<Schema>) {
-        //if (!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
+        if (!RolesChecker(interaction, true)) return interaction.reply('У вас недостаточно прав.');
         const serverDb: any = await Model.findOne({ id: interaction.guildId });
 
         if (interaction.options.getSubcommand() == 'add') {
