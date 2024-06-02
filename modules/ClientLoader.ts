@@ -5,6 +5,7 @@ import ListenerLoader from "./ListenerLoader";
 import GreetingModule from "./Greeting";
 import { Data } from "global";
 import DBSync from "./utils/DbAddServer";
+import aiModule from "./ai/init";
 const data: Data = require('../data/data.json');
 
 
@@ -23,8 +24,9 @@ class NewClient extends Client {
             mongoose.connect(data.mongodb)
                 .then(() => console.log('connected to MongoDB!'))
                 .catch((err) => console.log('failed to connect: ' + err));
-            ListenerLoader(this, this.ServerModel);
-            GreetingModule(this, this.ServerModel);
+            //ListenerLoader(this, this.ServerModel);
+            //GreetingModule(this, this.ServerModel);
+            aiModule(this);
         })
 
 

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const data: Data = require('../data/data.json');
 
 const GreetingModule = async (client: Client, Model: mongoose.Model<any>) => {
-    const serverDb: any = await Model.findOne({id: data.GuildId});
+    const serverDb: any = await Model.findOne({ id: data.GuildId });
     const channel = client.channels.cache.get(serverDb.greeting.channelId);
     const guild = client.guilds.cache.get(data.GuildId);
 
@@ -18,23 +18,16 @@ const GreetingModule = async (client: Client, Model: mongoose.Model<any>) => {
                 .replaceAll('%user%', `${user}`)
                 .replaceAll('%guild%', `${guild}`);
 
+            const greetingEmbed = new EmbedBuilder()
+                .setTitle('Приветствие')
+                .setDescription(message)
+                .setColor(0x0080ff)
 
-            function greet() {
-                const greetingEmbed = new EmbedBuilder()
-                    .setTitle('Приветствие')
-                    .setDescription(message)
-                    .setColor(0x0080ff)
-
-                return greetingEmbed;
+            if (serverDb.greeting.addAttachment != '') {
+                greetingEmbed.setImage(`${serverDb.greeting.addAttachment}`);
             }
 
-            let embed = greet();
-
-            if(serverDb.greeting.addAttachment != '') {
-                embed.setImage(`${serverDb.greeting.addAttachment}`);
-            }
-
-            (channel as TextChannel).send({ content: `${user}`, embeds: [embed] });
+            (channel as TextChannel).send({ content: `${user}`, embeds: [greetingEmbed] });
         })
 
         client.on(Events.GuildMemberRemove, async (user) => {
@@ -55,7 +48,7 @@ const GreetingModule = async (client: Client, Model: mongoose.Model<any>) => {
 
             let embed = greet();
 
-            if(serverDb.greeting.addAttachment != '') {
+            if (serverDb.greeting.addAttachment != '') {
                 embed.setImage(`${serverDb.greeting.removeAttachment}`);
             }
 
