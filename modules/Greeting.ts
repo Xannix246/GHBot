@@ -55,7 +55,7 @@ const GreetingModule = async (client: Client, Model: mongoose.Model<any>) => {
 
             let embed = greet();
 
-            if(serverDb.greeting.addAttachment != '') {
+            if(serverDb.greeting.removeAttachment != '') {
                 embed.setImage(`${serverDb.greeting.removeAttachment}`);
             }
 
