@@ -1,15 +1,16 @@
 import { glob, globSync, globStream, globStreamSync, Glob } from 'glob';
-import { Client, REST, Routes } from "discord.js";
+import { Guild, REST, Routes } from "discord.js";
 import { Data } from 'global';
+import NewClient from './ClientLoader';
 const data: Data = require('../data/data.json');
 
 
 
 //loads commands in './commands' folder
-const CommandLoader = async (client: any) => {
+const CommandLoader = async (client: NewClient) => {
 
     const files = new Glob('**/commands/**/*.@(ts|js)', {});
-    const commandsList = [];
+    const commandsList: any = [];
 
     for await (const file of files) {
         const command = require(`../${file}`);
@@ -25,19 +26,24 @@ const CommandLoader = async (client: any) => {
 
     //updating slash-commands (you can turn off it on data.json)
     if (data.updateCommands) {
-        const rest = new REST().setToken(data.token);
-        (async () => {
+        client.once('ready', async () => {
             try {
-                await rest.put(
-                    Routes.applicationGuildCommands(data.ClientId, data.GuildId),
-                    { body: commandsList }
-                )
-                console.log(`${commandsList.length} commands reloaded`)
+                const rest = new REST().setToken(data.token);
+
+                for (const [guildId, guild] of client.guilds.cache) {
+                    await rest.put(
+                        Routes.applicationGuildCommands(data.ClientId, guildId),
+                        { body: commandsList }
+                    );
+                }
+
+                console.log(`${commandsList.length} commands reloaded`);
             } catch (err) {
                 console.log(err);
             }
-        })();
+        });
     }
 }
+
 
 export default CommandLoader;

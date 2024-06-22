@@ -6,7 +6,7 @@ const data: Data = require('../data/data.json');
 const ListenerLoader = async (client: Client, Model: mongoose.Model<any>) => {
 
     client.on(Events.MessageReactionAdd, async (reaction, user) => {
-        const serverDb: any = await Model.findOne({ id: data.GuildId });
+        const serverDb: any = await Model.findOne({ id: reaction.message.guildId });
         if (user.bot) return;
         if (reaction.message.guildId == null) return console.log('not found');
 
@@ -37,7 +37,7 @@ const ListenerLoader = async (client: Client, Model: mongoose.Model<any>) => {
     })
 
     client.on(Events.MessageReactionRemove, async (reaction, user) => {
-        const serverDb: any = await Model.findOne({ id: data.GuildId });
+        const serverDb: any = await Model.findOne({ id: reaction.message.guildId });
         if (user.bot) return;
         if (reaction.message.guildId == null) return console.log('not found');
 
