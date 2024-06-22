@@ -41,15 +41,18 @@ const InterserverListener = async (client: NewClient) => {
                     if (repliedContent[0].startsWith('>')) {
                         repliedContent.shift();
                     }
-                    repliedTo.content = repliedContent.join('\n');
+                    repliedTo.content = repliedContent.slice(0, 97).join('...\n');
                 }
 
                 const messages = await channel.messages.fetch({ limit: 100 });
                 const targetMessage = messages.find(msg => msg.content.includes(repliedTo?.content as string));
 
-                const messageUrl = targetMessage ? `<https://discord.com/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}>` : '';
-                const displayName = targetMessage ? `**[${repliedTo?.author.displayName}](${messageUrl})**: ` : `**${repliedTo?.author.displayName}**:`;
+                const messageUrl = targetMessage && repliedTo?.content !== '' ? `<https://discord.com/channels/${targetMessage.guild.id}/${targetMessage.channel.id}/${targetMessage.id}>` : '';
+                const displayName = targetMessage && repliedTo?.content !== '' ? `**[${repliedTo?.author.displayName}](${messageUrl})**: ` : `**${repliedTo?.author.displayName}**: `;
                 const attachments = message.attachments.map(attachment => new AttachmentBuilder(attachment.url, { name: attachment.name }));
+
+                if(repliedTo?.content.length as number > 100 && repliedTo?.content) repliedTo.content = repliedTo.content.slice(0, 100) + (repliedTo?.content.length as number > 100 ? `...     [перейти](${messageUrl})` : '')
+                if(repliedTo?.content == '') repliedTo.content = ` \`Вложение\``
 
                 await webhook?.send({
                     content: `${messageId ? '> ' + displayName + repliedTo?.content : ''}\n${message.content}`,
