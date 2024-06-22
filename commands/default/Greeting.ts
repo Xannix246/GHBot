@@ -46,7 +46,6 @@ module.exports = {
                 .addStringOption(option =>
                     option.setName('message')
                         .setDescription('Текст сообщения')
-                        .setRequired(true)
                 )
                 .addAttachmentOption(option =>
                     option.setName('attachment')
@@ -89,7 +88,9 @@ module.exports = {
                 const attachment = interaction.options.getAttachment('attachment');
 
                 if (messageType == 'useradd') {
-                    serverDb.greeting.userAddText = message;
+                    if (message) {
+                        serverDb.greeting.userAddText = message;
+                    }
 
                     if (attachment) {
                         if (attachment.contentType?.includes('image')) {
@@ -98,7 +99,9 @@ module.exports = {
                     }
                     interaction.reply('Приветственное сообщение установлено!');
                 } else {
-                    serverDb.greeting.userRemoveText = message;
+                    if(message) {
+                        serverDb.greeting.userRemoveText = message;
+                    }
 
                     if (attachment) {
                         if (attachment.contentType?.includes('image')) {

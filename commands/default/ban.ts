@@ -19,7 +19,6 @@ module.exports = {
         )),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        
         if(!RolesChecker(interaction, false)) return interaction.reply('У вас недостаточно прав.');
 
         const user = interaction.options.getUser('user');
