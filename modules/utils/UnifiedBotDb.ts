@@ -7,6 +7,11 @@ const serverSchema = new Schema({
     channels: [{
         id: String,
         token: String
+    }],
+    users: [{
+        id: String,
+        nickname: String,
+        mentionable: Boolean
     }]
 });
 
@@ -21,7 +26,8 @@ const BotDBSync = async () => {
         const serverPush = new Server({
             id: 1,
             interserverChannels: [],
-            channels: []
+            channels: [],
+            users: []
         })
 
         await serverPush.save().then(() => {
